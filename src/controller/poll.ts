@@ -10,6 +10,7 @@ export async function insertPoll(
   const db = getDB();
   const pollCollection = db.collection("polls");
 
+  //Create new poll object
   const newPoll = {
     creator: userId,
     question,

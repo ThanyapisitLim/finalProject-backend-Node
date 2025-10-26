@@ -1,13 +1,13 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { insertPoll } from '../../controller/poll';
+import { getUserById } from '../../controller/users';
 
 const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { userId, question, options, expireAt } = req.body;
-
-        // ตรวจสอบ request
+        //Check required fields
         if (
             !userId ||
             !question ||
@@ -15,16 +15,33 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             !Array.isArray(options) ||
             !expireAt
         ) {
-            return res.status(400).json({ message: "Invalid request" });
+            return res.status(400).json({ message: "Invalid request: Missing required fields." });
+        }
+        
+        //Check user existence
+        let user;
+        try {
+            user = await getUserById(userId); 
+        } catch (e: any) {
+            if (e.message && e.message.includes("Invalid ObjectId")) {
+                console.error(`❌ Bad Request: ${e.message}`);
+                return res.status(400).json({ message: "Invalid user ID format. Must be a valid 24-character hexadecimal string." });
+            }
+            throw e;
         }
 
-        // แปลง expireAt เป็น Date object
+        //Check if user found
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        
+        //Check expireAt validity
         const expireDate = new Date(expireAt);
         if (isNaN(expireDate.getTime())) {
             return res.status(400).json({ message: "Invalid expireAt date" });
         }
 
-        // เรียก controller
+        //Create poll
         const poll = await insertPoll(userId, question, options, expireDate);
         res.status(201).json(poll);
     } catch (error) {

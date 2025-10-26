@@ -1,6 +1,7 @@
 import { getDB } from "../config/db";
 import { ObjectId } from "mongodb"
 
+//Store new user
 export async function storeUser(username: string, password: string): Promise<string> {
   try {
     const db = getDB();
@@ -10,13 +11,14 @@ export async function storeUser(username: string, password: string): Promise<str
     const result = await usersCollection.insertOne(newUser);
 
     console.log("✅ User stored with ID:", result.insertedId.toHexString());
-    return result.insertedId.toHexString(); // แปลง ObjectId เป็น string
+    return result.insertedId.toHexString();
   } catch (error) {
     console.error("❌ Error storing user:", error);
     throw error;
   }
 }
 
+//Get userId by username
 export async function getUserIdByUsername(username: string): Promise<any | null> {
   try {
     const db = getDB();
@@ -36,20 +38,21 @@ export async function getUserIdByUsername(username: string): Promise<any | null>
   }
 }
 
+//Check login credentials
 export async function loginCheck(username: string, password: string): Promise<string> {
   try {
     const db = getDB();
     const usersCollection = db.collection("users");
 
-    // ตรวจสอบ username
+    //Username check
     const user = await usersCollection.findOne({ username });
     if (!user) {
       console.log("⚠️ Username not found:", username);
       return "Username not found";
     }
 
-    // ตรวจสอบ password
-    if (user.password !== password) { // ถ้าใช้ hash ให้เปลี่ยนเป็น bcrypt.compare
+    //Password check
+    if (user.password !== password) {
       console.log("⚠️ Password incorrect for user:", username);
       return "Password incorrect";
     }
@@ -63,6 +66,7 @@ export async function loginCheck(username: string, password: string): Promise<st
   }
 }
 
+//Get user by userId
 export async function getUserById(userId: string): Promise<any | null> {
   try {
     if (!ObjectId.isValid(userId)) {

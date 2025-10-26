@@ -1,7 +1,6 @@
- // Assuming db is at same level now, adjust as needed
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb'; 
-import { WithId, Document } from 'mongodb'; // Import types for better safety
+import { WithId, Document } from 'mongodb';
 import { getDB } from '../config/db';
 
 const jwtSecret = process.env.JWT_SECRET || 'defaultsecretkey';

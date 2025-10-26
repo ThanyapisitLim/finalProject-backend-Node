@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb"
 
 export async function storeUser(username: string, password: string): Promise<string> {
   try {
-    const db = getDB(); // ใช้ connection ที่เชื่อมแล้ว
+    const db = getDB();
     const usersCollection = db.collection("users");
 
     const newUser = { username, password };

@@ -4,7 +4,7 @@ import { connectDB } from "./config/db"; // 👈 นำเข้า connectDB
 import createUsersRouter from "./router/auth/createUsers"; // 👈 นำเข้า createUsersRouter
 import getUsersRouter from "./router/data/getUsers"; // 👈 นำเข้า getUsersRouter
 import loginRouter from "./router/auth/login"; // 👈 นำเข้า loginRouter
-
+import createPollRouter from "./router/poll/createPoll"; // 👈 นำเข้า createPollRouter
 
 const app = express();
 const port = process.env.PORT;
@@ -20,9 +20,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // --- 2. ROUTER SETUP ---
-app.use("/create-users",createUsersRouter );
+//User Routers
+app.use("/create-user",createUsersRouter );
 app.use("/login", loginRouter)
-app.use("/get-users", getUsersRouter );
+app.use("/get-user", getUsersRouter );
+//Poll Routers
+app.use("/create-poll", createPollRouter);
 
 // --- 3. ERROR HANDLERS ---
 

@@ -66,6 +66,28 @@ export async function loginCheck(username: string, password: string): Promise<st
   }
 }
 
+//Create user check
+export async function createUserCheck(username: string): Promise<string> {
+  try {
+    const db = getDB();
+    const usersCollection = db.collection("users");
+
+    //Username existence check
+    const user = await usersCollection.findOne({ username });
+    if (user) {
+      console.log("⚠️ Username already exists:", username);
+      return "Username already exists";
+    }
+
+    console.log("✅ Username is available:", username);
+    return "Username is available";
+
+  } catch (error) {
+    console.error("❌ Error checking username availability:", error);
+    throw error;
+  }
+}
+
 //Get user by userId
 export async function getUserById(userId: string): Promise<any | null> {
   try {
@@ -77,9 +99,6 @@ export async function getUserById(userId: string): Promise<any | null> {
     const usersCollection = db.collection("users");
 
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-
-    if (user) console.log("✅ User retrieved:", user);
-    else console.log("⚠️ User not found with ID:", userId);
 
     return user;
   } catch (error) {

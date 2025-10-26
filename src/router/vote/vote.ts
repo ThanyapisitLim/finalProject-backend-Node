@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { vote } from '../../controller/vote';
+import { checkVoteSelected, vote } from '../../controller/vote';
 import { isValidObjectId } from 'mongoose';
 import { getUserById } from '../../controller/users';
 import { getPollByPollId } from '../../controller/poll';
@@ -28,18 +28,15 @@ router.post('/', async function (req: Request, res: Response, next: NextFunction
             }
             throw e;
         }
-
         //Check if user found
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
 
-
-                //Check user existence
+        //Check poll existence
         let poll;
         try {
             poll = await getPollByPollId(pollId);
-            console.log("Poll fetched for voting:", poll);
         } catch (e: any) {
             if (e.message && e.message.includes("Invalid ObjectId")) {
                 console.error(`❌ Bad Request: ${e.message}`);
@@ -50,6 +47,19 @@ router.post('/', async function (req: Request, res: Response, next: NextFunction
         //Check if poll found
         if (!poll) {
             return res.status(404).json({ message: "Poll not found." });
+        }
+
+        //Check selected option validity
+        let isValidOption = false;
+        try {
+            // checkVoteSelected returns a boolean indicating whether the selected option is valid
+            isValidOption = await checkVoteSelected({ selectedOption }, pollId);
+        } catch (e) {
+            console.error("❌ Error fetching poll for option validation:", e);
+            return res.status(500).json({ message: "Internal server error while validating selected option." });
+        }
+        if (!isValidOption) {
+            return res.status(404).json({ message: "Invalid option selected." });
         }
 
         //Process vote

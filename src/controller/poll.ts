@@ -35,9 +35,6 @@ export async function getPollByPollId(pollId: string): Promise<any | null> {
     const pollsCollection = db.collection("polls");
 
     const poll = await pollsCollection.findOne({ _id: new ObjectId(pollId) });
-    console.log("✅ Poll", poll);
-    if (poll) console.log("✅ Poll retrieved:", poll);
-    else console.log("⚠️ Poll not found with ID:", pollId);
 
     return poll;
   } catch (error) {

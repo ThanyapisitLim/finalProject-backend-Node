@@ -47,16 +47,12 @@ export async function getAllActivePoll(): Promise<any[]> {
     try {
         const db = getDB();
         const pollsCollection = db.collection("polls");
-
         // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
         const now = new Date();
         const allPolls = await pollsCollection.find({ expireAt: { $gt: now } }).toArray();
-        console.log(allPolls);
-
         return allPolls;
-
     } catch (error) {
-        console.error("❌ Error retrieving all poll votes:", error);
+        console.error("❌ Error retrieving all active polls:", error);
         throw error;
     }
 }

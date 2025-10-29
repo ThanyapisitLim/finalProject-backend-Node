@@ -3,10 +3,14 @@ import { getAllActivePoll } from '../../controller/poll';
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', async function(req: Request, res: Response, next: NextFunction) {
-  const allPolls = await getAllActivePoll();
-  console.log(allPolls);
-  res.json(allPolls);
+router.get('/', async function (req: Request, res: Response, next: NextFunction) {
+  try {
+    const allPolls = await getAllActivePoll();
+    console.log("All active poll : ", allPolls);
+    res.json(allPolls);
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import http from "http";
+import http, { get } from "http";
 import { connectDB } from "./config/db"; // 👈 นำเข้า connectDB
 import createUsersRouter from "./router/user/createUsers"; // 👈 นำเข้า createUsersRouter
 import getUsersRouter from "./router/user/getUsers"; // 👈 นำเข้า getUsersRouter
@@ -8,7 +8,8 @@ import createPollRouter from "./router/poll/createPoll"; // 👈 นำเข้
 import voteRouter from "./router/vote/vote"; // 👈 นำเข้า voteRouter
 import getPollsRouter from "./router/poll/getPolls"; // 👈 นำเข้า getPollsRouter
 import getVotesByPollRouter from "./router/vote/getVoteByPoll"; // 👈 นำเข้า getVotesByPollRouter
-import getVotesByUserRouter from "./router/vote/getVoteByUser";
+import getVotesByUserRouter from "./router/vote/getVoteByUser"; // 👈 นำเข้า getVotesByUserRouter
+import getPollsByUserRouter from "./router/poll/getPollByUser"; // 👈 นำเข้า getPollsByUserRouter
 
 const app = express();
 const port = process.env.PORT;
@@ -35,8 +36,7 @@ app.use("/get-user", getUsersRouter );
 app.use("/get-polls", getPollsRouter);
 app.use("/get-votes-by-poll", getVotesByPollRouter);
 app.use("/get-votes-by-user", getVotesByUserRouter);
-
-
+app.use("/get-polls-by-user", getPollsByUserRouter);
 // --- 3. ERROR HANDLERS ---
 
 app.use((req: Request, res: Response, next: NextFunction) => {

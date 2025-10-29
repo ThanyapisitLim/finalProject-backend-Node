@@ -44,15 +44,27 @@ export async function getPollByPollId(pollId: string): Promise<any | null> {
 }
 
 export async function getAllActivePoll(): Promise<any[]> {
-    try {
-        const db = getDB();
-        const pollsCollection = db.collection("polls");
-        // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
-        const now = new Date();
-        const allPolls = await pollsCollection.find({ expireAt: { $gt: now } }).toArray();
-        return allPolls;
-    } catch (error) {
-        console.error("❌ Error retrieving all active polls:", error);
-        throw error;
-    }
+  try {
+    const db = getDB();
+    const pollsCollection = db.collection("polls");
+    // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
+    const now = new Date();
+    const allPolls = await pollsCollection.find({ expireAt: { $gt: now } }).toArray();
+    return allPolls;
+  } catch (error) {
+    console.error("❌ Error retrieving all active polls:", error);
+    throw error;
+  }
+}
+
+export function getPollByUserId(userId: string): Promise<any[]> {
+  try {
+    const db = getDB();
+    const pollsCollection = db.collection("polls");
+
+    return pollsCollection.find({ creator: userId }).toArray();
+  } catch (error) {
+    console.error("❌ Error retrieving polls by user ID:", error);
+    throw error;
+  }
 }

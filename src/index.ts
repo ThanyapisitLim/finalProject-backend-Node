@@ -1,12 +1,14 @@
 import express, { Request, Response, NextFunction } from "express";
 import http from "http";
 import { connectDB } from "./config/db"; // 👈 นำเข้า connectDB
-import createUsersRouter from "./router/auth/createUsers"; // 👈 นำเข้า createUsersRouter
-import getUsersRouter from "./router/data/getUsers"; // 👈 นำเข้า getUsersRouter
-import loginRouter from "./router/auth/login"; // 👈 นำเข้า loginRouter
+import createUsersRouter from "./router/user/createUsers"; // 👈 นำเข้า createUsersRouter
+import getUsersRouter from "./router/user/getUsers"; // 👈 นำเข้า getUsersRouter
+import loginRouter from "./router/user/login"; // 👈 นำเข้า loginRouter
 import createPollRouter from "./router/poll/createPoll"; // 👈 นำเข้า createPollRouter
 import voteRouter from "./router/vote/vote"; // 👈 นำเข้า voteRouter
-import getPollsRouter from "./router/data/getPolls"; // 👈 นำเข้า getPollsRouter
+import getPollsRouter from "./router/poll/getPolls"; // 👈 นำเข้า getPollsRouter
+import getVotesByPollRouter from "./router/vote/getVoteByPoll"; // 👈 นำเข้า getVotesByPollRouter
+import getVotesByUserRouter from "./router/vote/getVoteByUser";
 
 const app = express();
 const port = process.env.PORT;
@@ -25,12 +27,14 @@ app.use(express.urlencoded({ extended: false }));
 //User Routers
 app.use("/create-user",createUsersRouter );
 app.use("/login", loginRouter)
-app.use("/get-user", getUsersRouter );
 //Poll Routers
 app.use("/create-poll", createPollRouter);
 app.use("/vote", voteRouter); // 👈 เพิ่ม Vote Router
 //Get Routers
+app.use("/get-user", getUsersRouter );
 app.use("/get-polls", getPollsRouter);
+app.use("/get-votes-by-poll", getVotesByPollRouter);
+app.use("/get-votes-by-user", getVotesByUserRouter);
 
 
 // --- 3. ERROR HANDLERS ---

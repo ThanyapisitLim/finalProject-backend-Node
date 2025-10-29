@@ -115,3 +115,29 @@ export async function checkVoteSelected(vote: any, pollId: string): Promise<bool
         throw error;
     }
 }
+
+export async function getVotesByPollId(pollId: string): Promise<any[]> {
+    try {
+        const db = getDB();
+        const voteCollection = db.collection("votes");
+
+        const votes = await voteCollection.find({ pollId: pollId }).toArray();
+        return votes;
+    } catch (error) {
+        console.error("❌ Error retrieving votes by pollId:", error);
+        throw error;
+    }
+}
+
+export async function getVoteByUserId(userId: string): Promise<any[]> {
+    try {
+        const db = getDB();
+        const voteCollection = db.collection("votes");
+
+        const votes = await voteCollection.find({ userId: userId }).toArray();
+        return votes;
+    } catch (error) {
+        console.error("❌ Error retrieving votes by userId:", error);
+        throw error;
+    }
+}

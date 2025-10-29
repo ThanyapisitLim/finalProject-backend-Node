@@ -42,3 +42,21 @@ export async function getPollByPollId(pollId: string): Promise<any | null> {
     throw error;
   }
 }
+
+export async function getAllActivePoll(): Promise<any[]> {
+    try {
+        const db = getDB();
+        const pollsCollection = db.collection("polls");
+
+        // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
+        const now = new Date();
+        const allPolls = await pollsCollection.find({ expireAt: { $gt: now } }).toArray();
+        console.log(allPolls);
+
+        return allPolls;
+
+    } catch (error) {
+        console.error("❌ Error retrieving all poll votes:", error);
+        throw error;
+    }
+}

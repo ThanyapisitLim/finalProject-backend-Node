@@ -6,6 +6,7 @@ import getUsersRouter from "./router/data/getUsers"; // 👈 นำเข้า 
 import loginRouter from "./router/auth/login"; // 👈 นำเข้า loginRouter
 import createPollRouter from "./router/poll/createPoll"; // 👈 นำเข้า createPollRouter
 import voteRouter from "./router/vote/vote"; // 👈 นำเข้า voteRouter
+import getPollsRouter from "./router/data/getPolls"; // 👈 นำเข้า getPollsRouter
 
 const app = express();
 const port = process.env.PORT;
@@ -28,6 +29,9 @@ app.use("/get-user", getUsersRouter );
 //Poll Routers
 app.use("/create-poll", createPollRouter);
 app.use("/vote", voteRouter); // 👈 เพิ่ม Vote Router
+//Get Routers
+app.use("/get-polls", getPollsRouter);
+
 
 // --- 3. ERROR HANDLERS ---
 

@@ -49,7 +49,10 @@ export async function getAllActivePoll(): Promise<any[]> {
     const pollsCollection = db.collection("polls");
     // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
     const now = new Date();
-    const allPolls = await pollsCollection.find({ expireAt: { $gt: now } }).toArray();
+    const allPolls = await pollsCollection
+      .find({ expireAt: { $gt: now } })
+      .sort({ createdAt: -1 }) // 👈 ใหม่ก่อน (descending)
+      .toArray();
     return allPolls;
   } catch (error) {
     console.error("❌ Error retrieving all active polls:", error);
@@ -79,10 +82,10 @@ export async function getQuestionByPollId(pollId: string): Promise<string | null
     const pollsCollection = db.collection<{ question: string }>("polls"); // เพิ่ม Type เพื่อความชัดเจน
 
     const poll = await pollsCollection.findOne(
-      { _id: new ObjectId(pollId) }, 
+      { _id: new ObjectId(pollId) },
       { projection: { question: 1 } }
     );
-    
+
     console.log("🔍 Retrieved question for poll ID", pollId, ":", poll?.question);
     return poll ? poll.question : null;
 

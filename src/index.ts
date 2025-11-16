@@ -43,6 +43,7 @@ app.use("/get-votes-by-poll", getVotesByPollRouter);
 app.use("/get-votes-by-user", getVotesByUserRouter);
 app.use("/get-polls-by-user", getPollsByUserRouter);
 app.use("/get-all-votes", getAllVoteRouter);
+app.use("/delete-poll", require("./router/poll/deletePoll").default); // 👈 เพิ่ม Delete Poll Router
 app.use("/visualization/all", visualizationRouter); // 👈 URL สำหรับแสดงผลโหวต
 // --- 3. ERROR HANDLERS ---
 

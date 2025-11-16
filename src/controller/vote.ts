@@ -185,3 +185,15 @@ export function getAllVote(): Promise<any[]> {
     throw error;
   }
 }
+
+export function deleteVoteByPollId(pollId: string): Promise<void> {
+  try {
+    const db = getDB();
+    const votesCollection = db.collection("votes");
+
+    return votesCollection.deleteMany({ pollId: pollId }).then(() => {});
+  } catch (error) {
+    console.error("❌ Error deleting votes by pollId:", error);
+    throw error;
+  }
+}

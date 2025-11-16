@@ -85,12 +85,34 @@ export async function getQuestionByPollId(pollId: string): Promise<string | null
       { _id: new ObjectId(pollId) },
       { projection: { question: 1 } }
     );
-
-    console.log("🔍 Retrieved question for poll ID", pollId, ":", poll?.question);
     return poll ? poll.question : null;
 
   } catch (error) {
     console.error("❌ Error retrieving question by poll ID:", error);
     throw error;
   }
+}
+
+export async function deletePoll(pollId: string): Promise<string[] | null> {
+  try {
+    if (!ObjectId.isValid(pollId)) {
+      throw new Error(`Invalid ObjectId: ${pollId}`);
+    }
+
+    const db = getDB();
+    const pollsCollection = db.collection("polls");
+
+    const result = await pollsCollection.deleteOne({ _id: new ObjectId(pollId) });
+
+    if (result.deletedCount === 1) {
+      console.log("✅ Poll deleted with ID:", pollId);
+      return [pollId];
+    } else {
+      console.log("⚠️ No poll found to delete with ID:", pollId);
+      return null;
+    }
+  } catch (error) {
+    console.error("❌ Error deleting poll:", error);
+    throw error;
+  } 
 }

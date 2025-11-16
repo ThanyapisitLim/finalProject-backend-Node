@@ -68,3 +68,26 @@ export function getPollByUserId(userId: string): Promise<any[]> {
     throw error;
   }
 }
+
+export async function getQuestionByPollId(pollId: string): Promise<string | null> {
+  try {
+    if (!ObjectId.isValid(pollId)) {
+      throw new Error(`Invalid ObjectId: ${pollId}`);
+    }
+
+    const db = getDB();
+    const pollsCollection = db.collection<{ question: string }>("polls"); // เพิ่ม Type เพื่อความชัดเจน
+
+    const poll = await pollsCollection.findOne(
+      { _id: new ObjectId(pollId) }, 
+      { projection: { question: 1 } }
+    );
+    
+    console.log("🔍 Retrieved question for poll ID", pollId, ":", poll?.question);
+    return poll ? poll.question : null;
+
+  } catch (error) {
+    console.error("❌ Error retrieving question by poll ID:", error);
+    throw error;
+  }
+}

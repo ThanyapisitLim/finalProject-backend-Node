@@ -1,18 +1,18 @@
 import express, { Request, Response, NextFunction } from "express";
 import http, { get } from "http";
-import path from 'path'; // 👈 นำเข้า path
-import { connectDB } from "./config/db"; // 👈 นำเข้า connectDB
-import createUsersRouter from "./router/user/createUsers"; // 👈 นำเข้า createUsersRouter
-import getUsersRouter from "./router/user/getUsers"; // 👈 นำเข้า getUsersRouter
-import loginRouter from "./router/user/login"; // 👈 นำเข้า loginRouter
-import createPollRouter from "./router/poll/createPoll"; // 👈 นำเข้า createPollRouter
-import voteRouter from "./router/vote/vote"; // 👈 นำเข้า voteRouter
-import getPollsRouter from "./router/poll/getPolls"; // 👈 นำเข้า getPollsRouter
-import getVotesByPollRouter from "./router/vote/getVoteByPoll"; // 👈 นำเข้า getVotesByPollRouter
-import getVotesByUserRouter from "./router/vote/getVoteByUser"; // 👈 นำเข้า getVotesByUserRouter
-import getPollsByUserRouter from "./router/poll/getPollByUser"; // 👈 นำเข้า getPollsByUserRouter
-import getAllVoteRouter from "./router/vote/getAllVote"; // 👈 นำเข้า getAllVoteRouter
-import visualizationRouter from "./router/visualizationRoute"; // 👈 นำเข้า visualizationRouter
+import path from 'path';
+import { connectDB } from "./config/db";
+import createUsersRouter from "./router/user/createUsers";
+import getUsersRouter from "./router/user/getUsers";
+import loginRouter from "./router/user/login";
+import createPollRouter from "./router/poll/createPoll";
+import voteRouter from "./router/vote/vote";
+import getPollsRouter from "./router/poll/getPolls";
+import getVotesByPollRouter from "./router/vote/getVoteByPoll";
+import getVotesByUserRouter from "./router/vote/getVoteByUser";
+import getPollsByUserRouter from "./router/poll/getPollByUser";
+import getAllVoteRouter from "./router/vote/getAllVote";
+import visualizationRouter from "./router/visualizationRoute";
 
 const app = express();
 const port = process.env.PORT;
@@ -26,9 +26,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// --- 1.5. VIEW ENGINE SETUP (เพิ่มส่วนนี้) ---
 app.set('view engine', 'ejs');
-// สมมติว่าโฟลเดอร์ views อยู่ที่ src/views
 app.set('views', path.join(__dirname, 'views'));
 
 // --- 2. ROUTER SETUP ---

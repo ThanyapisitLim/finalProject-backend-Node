@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #f0f2f5; color: #333; margin: 0; padding: 20px; }
+        h1 { color: #2c3e50; text-align: center; }
+        .poll-section { 
+            background: white; 
+            margin-bottom: 40px; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .poll-title { 
+            font-size: 1.5em; 
+            color: #3498db; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px; 
+        }
+        .vote-chain { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .block { 
+            background: #ecf0f1; 
+            border: 1px solid #bdc3c7; 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 6px; 
+            width: 100%; 
+            box-sizing: border-box;
+            position: relative;
+        }
+        .hash-pointer::before {
+            content: "↓";
+            position: absolute;
+            left: 20px;
+            top: -25px;
+            font-size: 2em;
+            color: #e74c3c;
+            display: block;
+        }
+        .hash { color: #27ae60; word-break: break-all; margin-top: 5px; font-weight: bold; font-size: 0.9em; }
+        .prev-hash { color: #e74c3c; word-break: break-all; font-size: 0.8em; }
+        .data-payload { margin-top: 10px; font-style: italic; color: #555; }
+        .block:first-child .prev-hash { color: #f39c12; }
+    </style>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p style="text-align: center;">Total Polls Tracked: <%= Object.keys(groupedResults).length %></p>
+
+    <% 
+        // 1. วนลูปสำหรับแต่ละ Poll
+        Object.keys(groupedResults).forEach(pollId => { 
+            const pollVotes = groupedResults[pollId];
+            const pollTitle = pollTitles[pollId] || `Poll ID: ${pollId}`; // ใช้ชื่อ Poll หรือ ID
+    %>
+        <div class="poll-section">
+            <div class="poll-title">🗳️ <%= pollTitle %> (<%= pollVotes.length %> Votes)</div>
+            
+            <div class="vote-chain">
+                <% 
+                    // 2. วนลูปสำหรับแต่ละ Vote (Block) ภายใน Poll
+                    pollVotes.forEach((vote, index) => { 
+                %>
+                    <div class="block <%= index > 0 ? 'hash-pointer' : '' %>">
+                        
+                        <div class="data-payload">
+                            Selected Option: **<%= vote.selectedOption %>**<br>
+                            Time: <%= new Date(vote.timestamp).toLocaleTimeString() %>
+                        </div>
+                        
+                        <hr style="border-top: 1px dashed #bdc3c7; margin: 10px 0;">
+                        
+                        <div>
+                            Previous Hash: 
+                            <span class="prev-hash">
+                                <%= vote.previousHash ? vote.previousHash : 'GENESIS BLOCK (null)' %>
+                            </span>
+                        </div>
+                        
+                        <div>
+                            Block Hash: 
+                            <span class="hash">
+                                <%= vote.currentHash %>
+                            </span>
+                        </div>
+                        
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    <% }); %>
+
+</body>
+</html>

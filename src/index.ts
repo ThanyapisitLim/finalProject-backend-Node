@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import http, { get } from "http";
+import path from 'path'; // 👈 นำเข้า path
 import { connectDB } from "./config/db"; // 👈 นำเข้า connectDB
 import createUsersRouter from "./router/user/createUsers"; // 👈 นำเข้า createUsersRouter
 import getUsersRouter from "./router/user/getUsers"; // 👈 นำเข้า getUsersRouter
@@ -10,6 +11,8 @@ import getPollsRouter from "./router/poll/getPolls"; // 👈 นำเข้า 
 import getVotesByPollRouter from "./router/vote/getVoteByPoll"; // 👈 นำเข้า getVotesByPollRouter
 import getVotesByUserRouter from "./router/vote/getVoteByUser"; // 👈 นำเข้า getVotesByUserRouter
 import getPollsByUserRouter from "./router/poll/getPollByUser"; // 👈 นำเข้า getPollsByUserRouter
+import getAllVoteRouter from "./router/vote/getAllVote"; // 👈 นำเข้า getAllVoteRouter
+import visualizationRouter from "./router/visualizationRoute"; // 👈 นำเข้า visualizationRouter
 
 const app = express();
 const port = process.env.PORT;
@@ -23,6 +26,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// --- 1.5. VIEW ENGINE SETUP (เพิ่มส่วนนี้) ---
+app.set('view engine', 'ejs');
+// สมมติว่าโฟลเดอร์ views อยู่ที่ src/views
+app.set('views', path.join(__dirname, 'views'));
 
 // --- 2. ROUTER SETUP ---
 //User Routers
@@ -37,6 +44,8 @@ app.use("/get-polls", getPollsRouter);
 app.use("/get-votes-by-poll", getVotesByPollRouter);
 app.use("/get-votes-by-user", getVotesByUserRouter);
 app.use("/get-polls-by-user", getPollsByUserRouter);
+app.use("/get-all-votes", getAllVoteRouter);
+app.use("/visualization/all", visualizationRouter); // 👈 URL สำหรับแสดงผลโหวต
 // --- 3. ERROR HANDLERS ---
 
 app.use((req: Request, res: Response, next: NextFunction) => {

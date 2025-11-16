@@ -7,6 +7,17 @@ import { getPollByPollId } from './poll';
 const jwtSecret = process.env.JWT_SECRET || 'defaultsecretkey';
 const JWT_EXPIRES_IN = '1h';
 
+interface RawVoteData {
+    _id: string;
+    userId: string;
+    pollId: string;
+    selectedOption: string;
+    timestamp: string;
+    previousHash: string | null; // นี่คือ Hash Pointer
+    currentHash: string; // นี่คือ Hash ของบล็อกปัจจุบัน
+}
+
+
 // Helper function: แยกเอาเฉพาะส่วนลายเซ็น (Signature) ของ JWT
 function extractJWTSignature(token: string): string {
     const parts = token.split('.');
@@ -140,4 +151,37 @@ export async function getVoteByUserId(userId: string): Promise<any[]> {
         console.error("❌ Error retrieving votes by userId:", error);
         throw error;
     }
+}
+
+export function groupVotesByPoll(rawData: RawVoteData[]): { [pollId: string]: RawVoteData[] } {
+    const groupedData: { [pollId: string]: RawVoteData[] } = {};
+
+    rawData.forEach(vote => {
+        const { pollId } = vote;
+        
+        if (!groupedData[pollId]) {
+            groupedData[pollId] = [];
+        }
+
+        groupedData[pollId].push(vote);
+    });
+
+    // Optional: จัดเรียงโหวตตาม Timestamp ภายในแต่ละ Poll เพื่อให้เห็น Chain ชัดเจน
+    for (const pollId in groupedData) {
+        groupedData[pollId].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    }
+
+    return groupedData;
+}
+
+export function getAllVote(): Promise<any[]> {
+  try {
+    const db = getDB();
+    const votesCollection = db.collection("votes");
+
+    return votesCollection.find({}).toArray();
+  } catch (error) {
+    console.error("❌ Error retrieving all polls:", error);
+    throw error;
+  }
 }

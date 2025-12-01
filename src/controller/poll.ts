@@ -60,6 +60,23 @@ export async function getAllActivePoll(): Promise<any[]> {
   }
 }
 
+export async function getAllExpPoll(): Promise<any[]> {
+  try {
+    const db = getDB();
+    const pollsCollection = db.collection("polls");
+    // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
+    const now = new Date();
+    const allPolls = await pollsCollection
+      .find({ expireAt: { $lte: now } })
+      .sort({ createdAt: -1 }) // 👈 ใหม่ก่อน (descending)
+      .toArray();
+    return allPolls;
+  } catch (error) {
+    console.error("❌ Error retrieving all active polls:", error);
+    throw error;
+  }
+}
+
 export function getPollByUserId(userId: string): Promise<any[]> {
   try {
     const db = getDB();

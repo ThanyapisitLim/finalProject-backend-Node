@@ -77,12 +77,12 @@ export async function getAllExpPoll(): Promise<any[]> {
   }
 }
 
-export function getPollByUserId(userId: string): Promise<any[]> {
+export async function getPollByUserId(userId: string): Promise<any[]> {
   try {
     const db = getDB();
     const pollsCollection = db.collection("polls");
-
-    return pollsCollection.find({ creator: userId }).toArray();
+    const polls = await pollsCollection.find({ creator: userId }).sort({ createdAt: -1 }).toArray();
+    return polls;
   } catch (error) {
     console.error("❌ Error retrieving polls by user ID:", error);
     throw error;
@@ -131,5 +131,5 @@ export async function deletePoll(pollId: string): Promise<string[] | null> {
   } catch (error) {
     console.error("❌ Error deleting poll:", error);
     throw error;
-  } 
+  }
 }

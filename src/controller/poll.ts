@@ -47,11 +47,11 @@ export async function getAllActivePoll(): Promise<any[]> {
   try {
     const db = getDB();
     const pollsCollection = db.collection("polls");
-    // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
+
     const now = new Date();
     const allPolls = await pollsCollection
       .find({ expireAt: { $gt: now } })
-      .sort({ createdAt: -1 }) // 👈 ใหม่ก่อน (descending)
+      .sort({ createdAt: -1 })
       .toArray();
     return allPolls;
   } catch (error) {
@@ -64,11 +64,10 @@ export async function getAllExpPoll(): Promise<any[]> {
   try {
     const db = getDB();
     const pollsCollection = db.collection("polls");
-    // ดึงเฉพาะที่ expireAt > เวลาปัจจุบัน
     const now = new Date();
     const allPolls = await pollsCollection
       .find({ expireAt: { $lte: now } })
-      .sort({ createdAt: -1 }) // 👈 ใหม่ก่อน (descending)
+      .sort({ createdAt: -1 })
       .toArray();
     return allPolls;
   } catch (error) {

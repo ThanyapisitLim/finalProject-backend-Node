@@ -17,11 +17,11 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
         ) {
             return res.status(400).json({ message: "Invalid request: Missing required fields." });
         }
-        
+
         //Check user existence
         let user;
         try {
-            user = await getUserById(userId); 
+            user = await getUserById(userId);
         } catch (e: any) {
             if (e.message && e.message.includes("Invalid ObjectId")) {
                 console.error(`❌ Bad Request: ${e.message}`);
@@ -30,11 +30,11 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             throw e;
         }
 
-        //Check if user found
+        //Check if user not found
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        
+
         //Check expireAt validity
         const expireDate = new Date(expireAt);
         if (isNaN(expireDate.getTime())) {

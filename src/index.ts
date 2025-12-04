@@ -19,7 +19,6 @@ const app = express();
 const port = process.env.PORT;
 
 // --- 1. MIDDLEWARE SETUP ---
-
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();
@@ -32,23 +31,23 @@ app.set('views', path.join(__dirname, 'views'));
 
 // --- 2. ROUTER SETUP ---
 //User Routers
-app.use("/create-user",createUsersRouter );
+app.use("/create-user", createUsersRouter);
 app.use("/login", loginRouter)
 //Poll Routers
 app.use("/create-poll", createPollRouter);
-app.use("/vote", voteRouter); // 👈 เพิ่ม Vote Router
+app.use("/vote", voteRouter);
 //Get Routers
-app.use("/get-user", getUsersRouter );
+app.use("/get-user", getUsersRouter);
 app.use("/get-polls", getPollsRouter);
 app.use("/get-votes-by-poll", getVotesByPollRouter);
 app.use("/get-votes-by-user", getVotesByUserRouter);
 app.use("/get-polls-by-user", getPollsByUserRouter);
 app.use("/get-exp-polls", getExpPollRouter);
 app.use("/get-all-votes", getAllVoteRouter);
-app.use("/delete-poll", require("./router/poll/deletePoll").default); // 👈 เพิ่ม Delete Poll Router
-app.use("/visualization/all", visualizationRouter); // 👈 URL สำหรับแสดงผลโหวต
-// --- 3. ERROR HANDLERS ---
+app.use("/delete-poll", require("./router/poll/deletePoll").default);
+app.use("/visualization/all", visualizationRouter);
 
+// --- 3. ERROR HANDLERS ---
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
   error.status = 404;
@@ -65,13 +64,9 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 // --- 4. SERVER STARTUP ---
-
 async function startServer() {
   try {
-    // ✅ เชื่อมต่อ MongoDB ก่อน
     await connectDB();
-
-    // ✅ แล้วค่อย start server
     const server = http.createServer(app);
     server.listen(port, () => {
       console.log(`🚀 Server is running at http://localhost:${port}`);

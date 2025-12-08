@@ -15,12 +15,12 @@ interface RawVoteData {
 
 export const visualizeAllVotes = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const rawVotes = await getAllVote(); 
+        const rawVotes = await getAllVote();
         const groupedResults = groupVotesByPoll(rawVotes as RawVoteData[]);
         const pollIds = Object.keys(groupedResults);
-        
-        const pollQuestionPromises = pollIds.map(pollId => 
-            getQuestionByPollId(pollId) // 👈 ต้องส่ง pollId เข้าไปในฟังก์ชัน
+
+        const pollQuestionPromises = pollIds.map(pollId =>
+            getQuestionByPollId(pollId)
         );
 
         const pollQuestions = await Promise.all(pollQuestionPromises);
@@ -29,12 +29,12 @@ export const visualizeAllVotes = async (req: Request, res: Response, next: NextF
             const question = pollQuestions[index];
             pollTitles[pollId] = question || `Unknown Poll (${pollId})`;
         });
-        
+
         //Render หน้า EJS
         res.render('blockchain_view', {
             title: "Blockchain Vote Chain Structure",
             groupedResults: groupedResults,
-            pollTitles: pollTitles, // ส่ง Map ชื่อ Poll ID ไปยัง EJS
+            pollTitles: pollTitles,
         });
 
     } catch (error) {

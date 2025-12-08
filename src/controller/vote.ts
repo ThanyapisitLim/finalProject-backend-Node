@@ -13,8 +13,8 @@ interface RawVoteData {
     pollId: string;
     selectedOption: string;
     timestamp: string;
-    previousHash: string | null; // นี่คือ Hash Pointer
-    currentHash: string; // นี่คือ Hash ของบล็อกปัจจุบัน
+    previousHash: string | null;
+    currentHash: string;
 }
 
 
@@ -158,7 +158,7 @@ export function groupVotesByPoll(rawData: RawVoteData[]): { [pollId: string]: Ra
 
     rawData.forEach(vote => {
         const { pollId } = vote;
-        
+
         if (!groupedData[pollId]) {
             groupedData[pollId] = [];
         }
@@ -175,25 +175,25 @@ export function groupVotesByPoll(rawData: RawVoteData[]): { [pollId: string]: Ra
 }
 
 export function getAllVote(): Promise<any[]> {
-  try {
-    const db = getDB();
-    const votesCollection = db.collection("votes");
+    try {
+        const db = getDB();
+        const votesCollection = db.collection("votes");
 
-    return votesCollection.find({}).toArray();
-  } catch (error) {
-    console.error("❌ Error retrieving all polls:", error);
-    throw error;
-  }
+        return votesCollection.find({}).toArray();
+    } catch (error) {
+        console.error("❌ Error retrieving all polls:", error);
+        throw error;
+    }
 }
 
 export function deleteVoteByPollId(pollId: string): Promise<void> {
-  try {
-    const db = getDB();
-    const votesCollection = db.collection("votes");
+    try {
+        const db = getDB();
+        const votesCollection = db.collection("votes");
 
-    return votesCollection.deleteMany({ pollId: pollId }).then(() => {});
-  } catch (error) {
-    console.error("❌ Error deleting votes by pollId:", error);
-    throw error;
-  }
+        return votesCollection.deleteMany({ pollId: pollId }).then(() => { });
+    } catch (error) {
+        console.error("❌ Error deleting votes by pollId:", error);
+        throw error;
+    }
 }

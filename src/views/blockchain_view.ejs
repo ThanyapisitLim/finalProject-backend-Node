@@ -82,17 +82,17 @@
       Total Polls Tracked: <%= Object.keys(groupedResults).length %>
     </p>
 
-    <% // 1. วนลูปสำหรับแต่ละ Poll Object.keys(groupedResults).forEach(pollId =>
-    { const pollVotes = groupedResults[pollId]; const pollTitle =
-    pollTitles[pollId] || `Poll ID: ${pollId}`; // ใช้ชื่อ Poll หรือ ID %>
+    <% Object.keys(groupedResults).forEach(pollId => { const pollVotes =
+    groupedResults[pollId]; const pollTitle = pollTitles[pollId] || `Poll ID:
+    ${pollId}`; %>
+
     <div class="poll-section">
       <div class="poll-title">
         🗳️ <%= pollTitle %> (<%= pollVotes.length %> Votes)
       </div>
 
       <div class="vote-chain">
-        <% // 2. วนลูปสำหรับแต่ละ Vote (Block) ภายใน Poll
-        pollVotes.forEach((vote, index) => { %>
+        <% pollVotes.forEach((vote, index) => { %>
         <div class="block <%= index > 0 ? 'hash-pointer' : '' %>">
           <div class="data-payload">
             Selected Option: **<%= vote.selectedOption %>**<br />
@@ -111,12 +111,13 @@
 
           <div>
             Block Hash:
-            <span class="hash"> <%= vote.currentHash %> </span>
+            <span class="hash"><%= vote.currentHash %></span>
           </div>
         </div>
         <% }); %>
       </div>
     </div>
+
     <% }); %>
   </body>
 </html>
